@@ -66,7 +66,7 @@ def main():
 
     # Training loop
     learning_rate = 0.01
-    num_iterations = 10
+    num_iterations = 30
 
     losses = []
     for i in range(num_iterations):
@@ -81,15 +81,15 @@ def main():
         if i % 10 == 0:
             print(f"Iteration {i}, Loss: {current_loss:.4f}")
 
-    # # Visualize results
-    # plt.figure(figsize=(8, 6))
+    # Visualize results
+    plt.figure(figsize=(8, 6))
 
     # # Plot loss over iterations
     # plt.subplot(2, 2, 1)
-    # plt.plot(losses)
-    # plt.title("Loss Curve")
-    # plt.xlabel("Iteration")
-    # plt.ylabel("Loss")
+    plt.plot(losses)
+    plt.title("Loss Curve")
+    plt.xlabel("Iteration")
+    plt.ylabel("Loss")
 
     # # Display original noisy image
     # plt.subplot(2, 2, 2)
@@ -111,7 +111,8 @@ def main():
     # plt.axis('off')
 
     # plt.tight_layout()
-    # plt.show()
+    #plt.show()
+    plt.savefig("output.png")
 
 if __name__ == "__main__":
     # profiler = cProfile.Profile()
