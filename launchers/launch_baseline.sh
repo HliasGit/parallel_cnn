@@ -13,4 +13,4 @@ cd {current_dir}
 eval "$(micromamba shell hook --shell bash)"
 micromamba activate cnn_parallel_env
 
-python baseline.py {data_folder} {num_epochs}
+python implementations/baseline.py {data_folder} {num_epochs}
