@@ -7,3 +7,4 @@ pandas
 ipykernel
 keras
 tensorflow
+scikit-learn
