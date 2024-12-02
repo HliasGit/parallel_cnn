@@ -55,8 +55,12 @@ def main(n_epochs, data_folder):
         y_pred = batch_convolution_2d(x_batch, kernel)
         return jnp.mean((y_pred - y_batch) ** 2)
 
-    key = jax.random.PRNGKey(seed)
-    kernel = jax.random.uniform(key, shape=(3, 3))
+    # key = jax.random.PRNGKey(seed)
+    # kernel = jax.random.uniform(key, shape=(3, 3))
+    kernel = jnp.array([[0.01, 0.0, 0.0],
+                        [-1.0, 0.0, 1.0],
+                        [0.0, 0.0, 0.0]])
+    
     batch_loss_grad = grad(batch_loss_fn)
     learning_rate = 0.01
     losses = []

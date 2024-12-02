@@ -75,10 +75,14 @@ def main(n_epochs, data_folder):
         return jnp.mean((y_pred - y_batch) ** 2)  # Mean squared error
     
     # Set random seed
-    key = jax.random.PRNGKey(seed)
+    # key = jax.random.PRNGKey(seed)
     
-    # Initialize kernel 3x3 randomly
-    kernel = jax.random.uniform(key, shape=(3, 3))
+    # # Initialize kernel 3x3 randomly
+    # kernel = jax.random.uniform(key, shape=(3, 3))
+
+    kernel = jnp.array([[0.01, 0.0, 0.0],
+                        [-1.0, 0.0, 1.0],
+                        [0.0, 0.0, 0.0]])
     
     # Gradient of the batch loss function w.r.t. the kernel
     batch_loss_grad = grad(batch_loss_fn)
@@ -91,7 +95,7 @@ def main(n_epochs, data_folder):
     start_time = time.time()
     start_cpu_time = time.process_time()
     
-    batch_size = 16
+    batch_size = 128
 
     for i in tqdm(range(n_epochs)):
 
