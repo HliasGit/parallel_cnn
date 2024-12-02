@@ -7,6 +7,9 @@ import jax.numpy as jnp
 from jax import grad
 from jax.scipy.signal import convolve2d
 import time
+import sys
+
+data_folder = sys.argv[1]
 
 # Load the MNIST dataset
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -120,11 +123,17 @@ for epoch in range(num_epochs):
 # Final kernel broadcasting to all processes
 kernel = comm.bcast(kernel if rank == 0 else None, root=0)
 
+
 if rank == 0:
     end_cpu = time.process_time()
     end_time = time.time()
     print(f"Total CPU time: {end_cpu - start_cpu:.2f}")
     print(f"Total time: {end_time - start_time:.2f}")
+
+    with open(f"{data_folder}/timings.txt", "w") as f:
+        f.write(f"Real time:{(end_time - start_time)*1000:.4f}\n")
+        f.write(f"CPU time:{(end_cpu - start_cpu)*1000:.4f}\n")
+
 
 
 # Visualization (only on root)
