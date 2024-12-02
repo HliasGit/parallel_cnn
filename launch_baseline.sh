@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#SBATCH --job-name=ensemble_forecasters
+#SBATCH --job-name=cnn_parallel
 #SBATCH --output={logs_folder}/output_%j.txt
 #SBATCH --error={logs_folder}/error_%j.txt
 #SBATCH --nodes={num_nodes}
@@ -11,6 +11,6 @@
 
 cd {current_dir}
 eval "$(micromamba shell hook --shell bash)"
-micromamba activate ensemble_venv
-module load mpi/OpenMPI/4.0.5-GCC-10.2.0
-mpirun -n {world_size} python parallel_cnn.py {data_folder}
+micromamba activate cnn_parallel_env
+
+python baseline.py {data_folder} {num_epochs}
