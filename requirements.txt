@@ -3,3 +3,7 @@ jaxlib
 jax
 numpy
 matplotlib
+pandas
+ipykernel
+keras
+tensorflow
