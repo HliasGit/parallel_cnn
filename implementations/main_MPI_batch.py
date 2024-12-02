@@ -6,6 +6,7 @@ import jax
 import jax.numpy as jnp
 from jax import grad
 from jax.scipy.signal import convolve2d
+import time
 
 # Load the MNIST dataset
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -65,6 +66,10 @@ kernel = jnp.array([[0.01, 0.0, 0.0],
 # Training loop
 num_batches = len(x_train_noisy) // batch_size
 
+if rank == 0:
+    start_cpu = time.process_time()
+    start_time = time.time()
+
 for epoch in range(num_epochs):
     epoch_loss = 0.0
 
@@ -109,31 +114,38 @@ for epoch in range(num_epochs):
             epoch_loss += total_loss
 
     # Print epoch loss on root
-    if rank == 0:
-        print(f"Epoch {epoch + 1}/{num_epochs}, Loss: {epoch_loss / num_batches:.4f}")
+    #if rank == 0:
+        #print(f"Epoch {epoch + 1}/{num_epochs}, Loss: {epoch_loss / num_batches:.4f}")
 
 # Final kernel broadcasting to all processes
 kernel = comm.bcast(kernel if rank == 0 else None, root=0)
 
-# Visualization (only on root)
 if rank == 0:
-    denoised_images = np.array([convolution_2d(img, kernel) for img in x_train_noisy[:5]])
+    end_cpu = time.process_time()
+    end_time = time.time()
+    print(f"Total CPU time: {end_cpu - start_cpu:.2f}")
+    print(f"Total time: {end_time - start_time:.2f}")
 
-    plt.figure(figsize=(10, 5))
-    for i in range(5):
-        plt.subplot(2, 5, i + 1)
-        plt.imshow(x_train_noisy[i], cmap='gray')
-        plt.title("Noisy")
-        plt.axis('off')
 
-        plt.subplot(2, 5, i + 6)
-        plt.imshow(denoised_images[i], cmap='gray')
-        plt.title("Denoised")
-        plt.axis('off')
+# Visualization (only on root)
+# if rank == 0:
+#     denoised_images = np.array([convolution_2d(img, kernel) for img in x_train_noisy[:5]])
 
-    plt.tight_layout()
-    plt.savefig("denoised_images_epoch.png", dpi=300)
-    print("Images saved to 'denoised_images_epoch.png'")
-    plt.close()
+    # plt.figure(figsize=(10, 5))
+    # for i in range(5):
+    #     plt.subplot(2, 5, i + 1)
+    #     plt.imshow(x_train_noisy[i], cmap='gray')
+    #     plt.title("Noisy")
+    #     plt.axis('off')
+
+    #     plt.subplot(2, 5, i + 6)
+    #     plt.imshow(denoised_images[i], cmap='gray')
+    #     plt.title("Denoised")
+    #     plt.axis('off')
+
+    # plt.tight_layout()
+    # plt.savefig("denoised_images_epoch.png", dpi=300)
+    # print("Images saved to 'denoised_images_epoch.png'")
+    # plt.close()
 
 MPI.Finalize()
