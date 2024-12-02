@@ -95,7 +95,7 @@ def main(n_epochs, data_folder):
     start_time = time.time()
     start_cpu_time = time.process_time()
     
-    batch_size = 128
+    batch_size = 1024
 
     for i in tqdm(range(n_epochs)):
 
